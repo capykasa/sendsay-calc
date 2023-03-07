@@ -1,0 +1,32 @@
+.mode-switch {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 38px;
+    padding: 1px;
+    background-color: $display-background;
+    border-radius: 6px;
+}
+
+.mode-switch_button {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 8px 12px;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    height: auto;
+}
+
+.mode-switch_button-active {
+    background-color: $background;
+    border: 1px solid $button-border;
+    border-radius: 5px;
+}
+
+.icon-active {
+    color: blue;
+}

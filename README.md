@@ -1,1 +1,1 @@
-# sendsay-calc
+Sendsay calculator

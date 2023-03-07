@@ -1,0 +1,53 @@
+.canvas__container {
+    height: 448px;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas__container-empty {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    border: 2px dashed #C4C4C4;
+    border-radius: 6px;
+}
+
+.canvas__container_svg {
+    margin: 8px;
+}
+
+.canvas__container_title {
+    margin: 0;
+
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: $accent;
+}
+
+.canvas__container_text {
+    margin: 0;
+    width: 106px;
+
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    color: $canvas-description;
+}
+
+.canvas__container-hover {
+    background-color: $background-hover;
+}
+
+.container-hover {
+    width: 244px;
+    height: 0px;
+    border: 1px solid $accent;
+}

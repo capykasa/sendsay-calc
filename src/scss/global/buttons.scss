@@ -1,0 +1,16 @@
+.button {
+    width: 72px;
+    height: 48px;
+    color: $text;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+
+    background: $background;
+    border: 1px solid $button-border;
+    border-radius: 6px;
+}
+
+.button:hover {
+    border: 2px solid $accent;
+}

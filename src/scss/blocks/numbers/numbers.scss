@@ -1,0 +1,12 @@
+.numbers {
+    height: 216px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+
+    & :nth-child(10) {
+        flex-grow: 1;
+    }
+}

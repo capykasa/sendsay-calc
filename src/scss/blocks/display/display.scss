@@ -1,0 +1,13 @@
+.display {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 232px;
+    height: 52px;
+    padding: 4px 8px;
+    background-color: $display-background;
+    font-size: 3.6rem;
+    font-weight: 800;
+    color: $display-text;
+    border-radius: 6px;
+}
