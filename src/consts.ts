@@ -6,8 +6,8 @@ export const enum Component {
 }
 
 export const enum Mode {
-    Runtime = 'runtime',
-    Constructor = 'constructor'
+    Runtime = 'Runtime',
+    Constructor = 'Constructor'
 }
 
 export const NO_DRAGGABLE = [Component.Display];
