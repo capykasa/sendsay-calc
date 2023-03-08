@@ -4,37 +4,27 @@ import CalcButton from './constructor/calc-button';
 import Display from './constructor/display';
 import Numbers from './constructor/Numbers';
 import Operators from './constructor/Operators';
-import { Component, NO_DRAGGABLE } from './consts';
-
-type Item = {
-    element: JSX.Element,
-    name: Component,
-    blocked: boolean
-}
+import { Component, NO_DRAGGABLE } from '../consts';
+import { DragItem } from '../types/items';
+import { findDoubleElement, replaceElements } from '../utils';
 
 const Main = () => {
-    const [items, setItems] = useState<Item[]>([
+    const [items, setItems] = useState<DragItem[]>([
         { element: <Display />, name: Component.Display, blocked: false },
         { element: <Operators />, name: Component.Operators, blocked: false },
         { element: <Numbers />, name: Component.Numbers, blocked: false },
         { element: <CalcButton />, name: Component.Submit, blocked: false },
     ])
-    const [canvasItems, setCanvasItems] = useState<Item[]>([]);
+    const [canvasItems, setCanvasItems] = useState<DragItem[]>([]);
 
     const [moveElement, setMoveElement] = useState<boolean>(false);
-    const [currentItem, setCurrentItem] = useState<Item | null>(null);
+    const [currentItem, setCurrentItem] = useState<DragItem | null>(null);
 
-    const findDoubleElement = (canvasItems: Item[], currentItem: Item) => canvasItems.find((item) => item.name === currentItem.name)
-
-    const replaceElements = (array: Item[], elementFrom: number, elementTo: number) => {
-        return array.splice(elementTo, 0, array.splice(elementFrom, 1)[0])
-    }
-
-    const blockedElement = (currentItem: Item) => {
+    const blockedElement = (currentItem: DragItem) => {
         setItems(items.map((item) => item === currentItem ? { ...item, blocked: true } : item));
     }
 
-    const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: Item) => {
+    const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
         setCurrentItem(item);
     }
 
@@ -70,7 +60,7 @@ const Main = () => {
         }
     }
 
-    const dropCanvasHandler = (evt: DragEvent<HTMLDivElement>, item: Item) => {
+    const dropCanvasHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
         if (currentItem === null) {
             return;
         }
@@ -85,7 +75,7 @@ const Main = () => {
         replaceElements(canvasItems, currentItemId, itemId);
     }
 
-    const canvasElementTemplate = (item: Item) => {
+    const canvasElementTemplate = (item: DragItem) => {
         return (
             <div className="wrapper" key={item.name}
                 onDragStart={(evt) => dragStartHandler(evt, item)}
@@ -100,7 +90,7 @@ const Main = () => {
         );
     }
 
-    const canvasBlockedElementTemplate = (item: Item) => {
+    const canvasBlockedElementTemplate = (item: DragItem) => {
         return (
             <div className="wrapper" key={item.name}>
                 <div className="container">

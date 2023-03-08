@@ -5,4 +5,9 @@ export const enum Component {
     Submit = 'submit',
 }
 
+export const enum Mode {
+    Runtime = 'runtime',
+    Constructor = 'constructor'
+}
+
 export const NO_DRAGGABLE = [Component.Display];
