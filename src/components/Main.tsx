@@ -1,4 +1,4 @@
-import { DragEvent, useState } from 'react';
+import { DragEvent, MouseEvent, useState } from 'react';
 import ModeSwitch from './canvas/mode-switch';
 import CalcButton from './constructor/calc-button';
 import Display from './constructor/display';
@@ -6,7 +6,7 @@ import Numbers from './constructor/Numbers';
 import Operators from './constructor/Operators';
 import { Component, Mode, NO_DRAGGABLE } from '../consts';
 import { DragItem } from '../types/items';
-import { findDoubleElement, replaceElements } from '../utils';
+import { findDoubleElement, removeElement, replaceElements } from '../utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducers/store';
 
@@ -24,8 +24,11 @@ const Main = () => {
     const [moveElement, setMoveElement] = useState<boolean>(false);
     const [currentItem, setCurrentItem] = useState<DragItem | null>(null);
 
-    const blockedElement = (currentItem: DragItem) => {
-        setItems(items.map((item) => item === currentItem ? { ...item, blocked: true } : item));
+    const blockedElement = (currentItemName: string) => {
+        setItems(items.map((item) => item.name === currentItemName ? { ...item, blocked: true } : item));
+    }
+    const unblockedElement = (currentItemName: string) => {
+        setItems(items.map((item) => item.name === currentItemName ? { ...item, blocked: false } : item));
     }
 
     const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
@@ -50,7 +53,7 @@ const Main = () => {
 
         if (canvasItems.length === 0) {
             setCanvasItems([currentItem]);
-            blockedElement(currentItem);
+            blockedElement(currentItem.name);
             return;
         }
 
@@ -60,7 +63,7 @@ const Main = () => {
                 ? setCanvasItems(items => [currentItem, ...items])
                 : setCanvasItems(items => [...items, currentItem]);
 
-            blockedElement(currentItem);
+            blockedElement(currentItem.name);
         }
     }
 
@@ -79,6 +82,26 @@ const Main = () => {
         replaceElements(canvasItems, currentItemId, itemId);
     }
 
+    const doubleClick = (evt: MouseEvent<HTMLDivElement>, item: DragItem) => {
+        const newCanvasItems = removeElement(canvasItems, item.name);
+        setCanvasItems(newCanvasItems);
+
+        unblockedElement(item.name);
+    }
+
+    const elementTemplate = (item: DragItem) => {
+        return (
+            <div className="wrapper" key={item.name}>
+                <div className={item.blocked ? "container container-blocked" : "container"} key={item.name}
+                    onDragStart={(evt) => dragStartHandler(evt, item)}
+                    onDragEnd={(evt) => dragEndHandler(evt)}
+                    draggable={!item.blocked}>
+                    {item.element}
+                </div>
+            </div>
+        )
+    }
+
     const canvasElementTemplate = (item: DragItem) => {
         return (
             <div className="wrapper" key={item.name}
@@ -86,6 +109,7 @@ const Main = () => {
                 onDragEnd={(evt) => dragEndHandler(evt)}
                 onDrop={(evt) => dropCanvasHandler(evt, item)}
                 draggable={!NO_DRAGGABLE.includes(item.name)}
+                onDoubleClick={(evt) => doubleClick(evt, item)}
             >
                 <div className="container">
                     {item.element}
@@ -96,7 +120,9 @@ const Main = () => {
 
     const canvasBlockedElementTemplate = (item: DragItem) => {
         return (
-            <div className="wrapper" key={item.name}>
+            <div className="wrapper" key={item.name}
+                onDoubleClick={(evt) => doubleClick(evt, item)}
+            >
                 <div className="container">
                     {item.element}
                 </div>
@@ -115,13 +141,13 @@ const Main = () => {
     const getHiddenClassForRuntime = (mode: Mode, currentMode: Mode) => {
         return mode === currentMode
             ? "visually-hidden"
-            : ''
+            : 'container-for-hiding'
     }
 
     const emptyCanvasTemplate = () => {
         return (
-            <div className="canvas__container-empty">
-                <div className={getHiddenClassForRuntime(Mode.Runtime, currentMode)}>
+            <div className={getHiddenClassForRuntime(Mode.Runtime, currentMode)}>
+                <div className="canvas__container-empty">
                     <svg className="canvas__container_svg" width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M18.7778 1V5.44444" stroke="black" strokeWidth="2" strokeLinecap="round" />
                         <path d="M21 3.22222L16.5556 3.22222" stroke="black" strokeWidth="2" strokeLinecap="round" />
@@ -143,20 +169,7 @@ const Main = () => {
             <div className="page-main">
                 <div className="page-main__constructor">
                     <div className={getHiddenClassForRuntime(Mode.Runtime, currentMode)}>
-                        {items.map((item) => {
-                            const containerBlocked = item.blocked;
-
-                            return (
-                                <div className="wrapper" key={item.name}>
-                                    <div className={containerBlocked ? "container container-blocked" : "container"} key={item.name}
-                                        onDragStart={(evt) => dragStartHandler(evt, item)}
-                                        onDragEnd={(evt) => dragEndHandler(evt)}
-                                        draggable={!containerBlocked}>
-                                        {item.element}
-                                    </div>
-                                </div>
-                            )
-                        })}
+                        {items.map((item) => elementTemplate(item))}
                     </div>
                 </div>
                 <div className="page-main__canvas">
