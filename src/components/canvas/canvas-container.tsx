@@ -1,6 +1,6 @@
 const CanvasContainer = () => {
     return (
-        <div className="canvas__container canvas__container-hover">
+        <>
             <div className="container">
                 <div className="calc">
                     <button className="button calc-button" type="button">=</button>
@@ -22,7 +22,7 @@ const CanvasContainer = () => {
                 <h3 className="canvas__container_title">Перетащите сюда</h3>
                 <p className="canvas__container_text">любой элемент из левой панели</p>
             </div>
-        </div>
+        </>
     );
 }
 

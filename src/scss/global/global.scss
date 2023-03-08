@@ -32,8 +32,11 @@ body {
     gap: 56px;
 }
 
-.wrapper:not(:last-of-type) {
-    margin-bottom: 12px;
+.wrapper {
+
+    &:not(:last-of-type) {
+        margin-bottom: 12px;
+    }
 }
 
 .container-blocked {
