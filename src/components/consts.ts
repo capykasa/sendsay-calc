@@ -4,3 +4,5 @@ export const enum Component {
     Numbers = 'numbers',
     Submit = 'submit',
 }
+
+export const NO_DRAGGABLE = [Component.Display];

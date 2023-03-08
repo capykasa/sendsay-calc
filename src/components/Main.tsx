@@ -4,11 +4,11 @@ import CalcButton from './constructor/calc-button';
 import Display from './constructor/display';
 import Numbers from './constructor/Numbers';
 import Operators from './constructor/Operators';
-import { Component } from './consts';
+import { Component, NO_DRAGGABLE } from './consts';
 
 type Item = {
     element: JSX.Element,
-    name: string,
+    name: Component,
     blocked: boolean
 }
 
@@ -28,6 +28,10 @@ const Main = () => {
 
     const replaceElements = (array: Item[], elementFrom: number, elementTo: number) => {
         return array.splice(elementTo, 0, array.splice(elementFrom, 1)[0])
+    }
+
+    const blockedElement = (currentItem: Item) => {
+        setItems(items.map((item) => item === currentItem ? { ...item, blocked: true } : item));
     }
 
     const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: Item) => {
@@ -52,11 +56,17 @@ const Main = () => {
 
         if (canvasItems.length === 0) {
             setCanvasItems([currentItem]);
+            blockedElement(currentItem);
             return;
         }
 
         if (findDoubleElement(canvasItems, currentItem) === undefined) {
-            setCanvasItems(items => [...items, currentItem]);
+
+            NO_DRAGGABLE.includes(currentItem.name)
+                ? setCanvasItems(items => [currentItem, ...items])
+                : setCanvasItems(items => [...items, currentItem]);
+
+            blockedElement(currentItem);
         }
     }
 
@@ -75,14 +85,24 @@ const Main = () => {
         replaceElements(canvasItems, currentItemId, itemId);
     }
 
-    const canvasTemplate = (item: Item) => {
+    const canvasElementTemplate = (item: Item) => {
         return (
             <div className="wrapper" key={item.name}
                 onDragStart={(evt) => dragStartHandler(evt, item)}
                 onDragEnd={(evt) => dragEndHandler(evt)}
                 onDrop={(evt) => dropCanvasHandler(evt, item)}
-                draggable={true}
+                draggable={!NO_DRAGGABLE.includes(item.name)}
             >
+                <div className="container">
+                    {item.element}
+                </div>
+            </div>
+        );
+    }
+
+    const canvasBlockedElementTemplate = (item: Item) => {
+        return (
+            <div className="wrapper" key={item.name}>
                 <div className="container">
                     {item.element}
                 </div>
@@ -114,7 +134,7 @@ const Main = () => {
         )
     }
 
-    const canvasHoverView = moveElement === true ? "canvas__container canvas__container-hover" : "canvas__container";
+    const canvasHoverView = moveElement === true && canvasItems.length === 0 ? "canvas__container canvas__container-hover" : "canvas__container";
 
     return (
         <div className="page">
@@ -145,7 +165,7 @@ const Main = () => {
                     >
 
                         {(canvasItems.length > 0)
-                            ? canvasItems.map((item) => canvasTemplate(item))
+                            ? canvasItems.map((item) => !NO_DRAGGABLE.includes(item.name) ? canvasElementTemplate(item) : canvasBlockedElementTemplate(item))
                             : emptyCanvasTemplate()}
 
                     </div>
