@@ -24,6 +24,12 @@ const Main = () => {
     const [moveElement, setMoveElement] = useState<boolean>(false);
     const [currentItem, setCurrentItem] = useState<Item | null>(null);
 
+    const findDoubleElement = (canvasItems: Item[], currentItem: Item) => canvasItems.find((item) => item.name === currentItem.name)
+
+    const replaceElements = (array: Item[], elementFrom: number, elementTo: number) => {
+        return array.splice(elementTo, 0, array.splice(elementFrom, 1)[0])
+    }
+
     const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: Item) => {
         setCurrentItem(item);
     }
@@ -49,11 +55,24 @@ const Main = () => {
             return;
         }
 
-        const doubleElement = canvasItems.find((item) => item.name === currentItem.name)
-
-        if (doubleElement === undefined) {
+        if (findDoubleElement(canvasItems, currentItem) === undefined) {
             setCanvasItems(items => [...items, currentItem]);
         }
+    }
+
+    const dropCanvasHandler = (evt: DragEvent<HTMLDivElement>, item: Item) => {
+        if (currentItem === null) {
+            return;
+        }
+
+        if (findDoubleElement(canvasItems, currentItem) === undefined) {
+            return
+        }
+
+        const itemId = canvasItems.indexOf(item);
+        const currentItemId = canvasItems.indexOf(currentItem);
+
+        replaceElements(canvasItems, currentItemId, itemId);
     }
 
     const canvasTemplate = (item: Item) => {
@@ -61,6 +80,7 @@ const Main = () => {
             <div className="wrapper" key={item.name}
                 onDragStart={(evt) => dragStartHandler(evt, item)}
                 onDragEnd={(evt) => dragEndHandler(evt)}
+                onDrop={(evt) => dropCanvasHandler(evt, item)}
                 draggable={true}
             >
                 <div className="container">
