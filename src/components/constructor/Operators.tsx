@@ -1,16 +1,34 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { operators } from '../../consts';
-import { resultToNumberOne, setOperator } from '../../store/reducers/CalculatorSlice';
+import { Mode, operators } from '../../consts';
+import { resultToNumberOne, setNumberOne, setOperator, setResult } from '../../store/reducers/CalculatorSlice';
 import { RootState } from '../../store/reducers/store';
 
 const Operators = () => {
-    const resultView = useSelector((state: RootState) => state.calculator.resultView)
+    const currentMode = useSelector((state: RootState) => state.calculator.mode)
+    const numberOne = useSelector((state: RootState) => state.calculator.numberOne)
+    const numberTwo = useSelector((state: RootState) => state.calculator.numberTwo)
+    const result = useSelector((state: RootState) => state.calculator.result)
     const dispatch = useDispatch()
 
     const currentInput = (operator: string) => {
-        if (resultView) {
+        if (currentMode === Mode.Constructor) {
+            return
+        }
+
+        if (numberOne === '' && result === '0' && operator === '-') {
+            dispatch(setNumberOne(operator))
+            return
+        }
+
+        if (numberOne === '') {
             dispatch(resultToNumberOne(operator))
         }
+
+        if (numberOne !== '' && numberTwo !== '') {
+            dispatch(setResult())
+            dispatch(resultToNumberOne(operator))
+        }
+
         dispatch(setOperator(operator))
     }
 

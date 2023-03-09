@@ -10,7 +10,7 @@ const initialState: State = {
     decimal: false,
     operator: '',
     result: '0',
-    resultView: false
+    resultView: true
 }
 
 export const modeSlice = createSlice({
@@ -68,6 +68,14 @@ export const modeSlice = createSlice({
             state.operator = action.payload
             state.numberOne = state.result.toString()
             state.result = '0'
+        },
+        clean: (state) => {
+            state.numberOne = ''
+            state.numberTwo = ''
+            state.decimal = false
+            state.operator = ''
+            state.result = '0'
+            state.resultView = true
         }
     }
 })
@@ -80,7 +88,8 @@ export const {
     removeDecimal,
     setOperator,
     setResult,
-    resultToNumberOne
+    resultToNumberOne,
+    clean
 } = modeSlice.actions
 
 export default modeSlice.reducer

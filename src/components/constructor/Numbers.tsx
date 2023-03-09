@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { symbols } from '../../consts';
+import { Mode, symbols } from '../../consts';
 import { setDecimal, setNumberOne, setNumberTwo } from '../../store/reducers/CalculatorSlice';
 import { RootState } from '../../store/reducers/store';
 
 const Numbers = () => {
-    const currentOperator = useSelector((state: RootState) => state.calculator.operator)
-    const currentNumberOne = useSelector((state: RootState) => state.calculator.numberOne)
+    const currentMode = useSelector((state: RootState) => state.calculator.mode)
+    const operator = useSelector((state: RootState) => state.calculator.operator)
     const decimal = useSelector((state: RootState) => state.calculator.decimal)
     const dispatch = useDispatch()
 
     const setNumber = (symbol: string) => {
+        if (currentMode === Mode.Constructor) {
+            return
+        }
+
         if (symbol === ',' && decimal === false) {
             dispatch(setDecimal(true))
         }
@@ -18,15 +22,13 @@ const Numbers = () => {
             return
         }
 
-        if (currentOperator === '') {
+        if (operator === '') {
             dispatch(setNumberOne(symbol))
             return
         }
 
         dispatch(setNumberTwo(symbol))
     }
-
-    console.log(currentNumberOne.split(',', 2).join('.'))
 
     return (
         <div className="numbers">
