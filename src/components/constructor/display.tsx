@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers/store';
+import { infinityDisplay } from '../../utils';
 
 const Display = () => {
     const operator = useSelector((state: RootState) => state.calculator.operator)
@@ -7,6 +8,7 @@ const Display = () => {
     const numberTwo = useSelector((state: RootState) => state.calculator.numberTwo)
     const result = useSelector((state: RootState) => state.calculator.result)
     const resultView = useSelector((state: RootState) => state.calculator.resultView)
+    console.log(result)
 
     const currentValue = () => {
         if (resultView) {
@@ -19,11 +21,10 @@ const Display = () => {
 
         return numberTwo
     }
-    //const currentNumber = operator === '' ? numberOne : numberTwo
 
     return (
         <div className="display">
-            <span className="display_value">{currentValue()}</span>
+            <span className="display_value">{infinityDisplay(currentValue())}</span>
         </div>
     );
 };

@@ -6,6 +6,6 @@ export type State = {
     numberTwo: string;
     decimal: boolean;
     operator: string;
-    result: number;
+    result: string;
     resultView: boolean;
 }

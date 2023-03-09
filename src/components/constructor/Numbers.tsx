@@ -18,9 +18,12 @@ const Numbers = () => {
             return
         }
 
-        currentOperator === ''
-            ? dispatch(setNumberOne(symbol))
-            : dispatch(setNumberTwo(symbol))
+        if (currentOperator === '') {
+            dispatch(setNumberOne(symbol))
+            return
+        }
+
+        dispatch(setNumberTwo(symbol))
     }
 
     console.log(currentNumberOne.split(',', 2).join('.'))

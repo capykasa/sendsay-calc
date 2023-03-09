@@ -32,3 +32,5 @@ export const operators = [
     { operator: '-' },
     { operator: '+' },
 ];
+
+export const MAX_DISPLAY_SYMBOLS = 13;

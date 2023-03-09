@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Mode } from '../../consts';
 import { State } from '../../types/state';
+import { forStateNumber, forStateResult } from '../../utils';
 
 const initialState: State = {
     mode: Mode.Constructor,
@@ -8,7 +9,7 @@ const initialState: State = {
     numberTwo: '',
     decimal: false,
     operator: '',
-    result: 0,
+    result: '0',
     resultView: false
 }
 
@@ -20,10 +21,12 @@ export const modeSlice = createSlice({
             state.mode = action.payload
         },
         setNumberOne: (state, action: PayloadAction<string>) => {
-            state.numberOne += action.payload.split(',', 2).join(',')
+            state.result = '0'
+            state.resultView = false
+            state.numberOne += forStateNumber(action.payload)
         },
         setNumberTwo: (state, action: PayloadAction<string>) => {
-            state.numberTwo += action.payload.split(',', 2).join(',')
+            state.numberTwo += forStateNumber(action.payload)
         },
         setDecimal: (state, action: PayloadAction<boolean>) => {
             state.decimal = action.payload
@@ -38,19 +41,22 @@ export const modeSlice = createSlice({
             state.resultView = true
             const numberOne = Number(state.numberOne.split(',', 2).join('.'))
             const numberTwo = Number(state.numberTwo.split(',', 2).join('.'))
+            let result = 0;
 
             if (state.operator === '/') {
-                state.result = numberOne / numberTwo
+                result = numberOne / numberTwo
             }
             if (state.operator === 'x') {
-                state.result = numberOne * numberTwo
+                result = numberOne * numberTwo
             }
             if (state.operator === '-') {
-                state.result = numberOne - numberTwo
+                result = numberOne - numberTwo
             }
             if (state.operator === '+') {
-                state.result = numberOne + numberTwo
+                result = numberOne + numberTwo
             }
+
+            state.result = forStateResult(result)
 
             state.numberOne = ''
             state.numberTwo = ''
@@ -61,7 +67,7 @@ export const modeSlice = createSlice({
             state.resultView = false
             state.operator = action.payload
             state.numberOne = state.result.toString()
-            state.result = 0
+            state.result = '0'
         }
     }
 })
