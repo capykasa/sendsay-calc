@@ -7,4 +7,5 @@ export type State = {
     decimal: boolean;
     operator: string;
     result: number;
+    resultView: boolean;
 }

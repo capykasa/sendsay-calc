@@ -1,18 +1,29 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers/store';
 
 const Display = () => {
-    const currentOperator = useSelector((state: RootState) => state.calculator.operator)
-    const currentNumberOne = useSelector((state: RootState) => state.calculator.numberOne)
-    const currentNumberTwo = useSelector((state: RootState) => state.calculator.numberTwo)
+    const operator = useSelector((state: RootState) => state.calculator.operator)
+    const numberOne = useSelector((state: RootState) => state.calculator.numberOne)
+    const numberTwo = useSelector((state: RootState) => state.calculator.numberTwo)
+    const result = useSelector((state: RootState) => state.calculator.result)
+    const resultView = useSelector((state: RootState) => state.calculator.resultView)
 
-    const dispatch = useDispatch()
+    const currentValue = () => {
+        if (resultView) {
+            return result
+        }
 
-    const currentNumber = currentOperator === '' ? currentNumberOne : currentNumberTwo
+        if (operator === '') {
+            return numberOne
+        }
+
+        return numberTwo
+    }
+    //const currentNumber = operator === '' ? numberOne : numberTwo
 
     return (
         <div className="display">
-            <span className="display_value">{currentNumber}</span>
+            <span className="display_value">{currentValue()}</span>
         </div>
     );
 };
