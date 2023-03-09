@@ -1,10 +1,22 @@
+import { useDispatch } from 'react-redux';
+import { operators } from '../../consts';
+import { setOperator } from '../../store/reducers/CalculatorSlice';
+
 const Operators = () => {
+    const dispatch = useDispatch()
+
     return (
         <div className="operators">
-            <button className="button operators_item" type="button">/<span className=""></span></button>
-            <button className="button operators_item" type="button">x<span className=""></span></button>
-            <button className="button operators_item" type="button">-<span className=""></span></button>
-            <button className="button operators_item" type="button">+<span className=""></span></button>
+            {operators.map((item) => (
+                <button
+                    className="button operators_item"
+                    type="button"
+                    key={item.operator}
+                    onClick={() => dispatch(setOperator(item.operator))}
+                >
+                    {item.operator}
+                </button>
+            ))}
         </div>
     );
 };

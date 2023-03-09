@@ -1,17 +1,42 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { symbols } from '../../consts';
+import { setDecimal, setNumberOne, setNumberTwo } from '../../store/reducers/CalculatorSlice';
+import { RootState } from '../../store/reducers/store';
+
 const Numbers = () => {
+    const currentOperator = useSelector((state: RootState) => state.calculator.operator)
+    const currentNumberOne = useSelector((state: RootState) => state.calculator.numberOne)
+    const decimal = useSelector((state: RootState) => state.calculator.decimal)
+    const dispatch = useDispatch()
+
+    const setNumber = (symbol: string) => {
+        if (symbol === ',' && decimal === false) {
+            dispatch(setDecimal(true))
+        }
+
+        if (symbol === ',' && decimal === true) {
+            return
+        }
+
+        currentOperator === ''
+            ? dispatch(setNumberOne(symbol))
+            : dispatch(setNumberTwo(symbol))
+    }
+
+    console.log(currentNumberOne.split(',', 2).join('.'))
+
     return (
         <div className="numbers">
-            <button className="button numbers_item" type="button">7<span className=""></span></button>
-            <button className="button numbers_item" type="button">8<span className=""></span></button>
-            <button className="button numbers_item" type="button">9<span className=""></span></button>
-            <button className="button numbers_item" type="button">4<span className=""></span></button>
-            <button className="button numbers_item" type="button">5<span className=""></span></button>
-            <button className="button numbers_item" type="button">6<span className=""></span></button>
-            <button className="button numbers_item" type="button">1<span className=""></span></button>
-            <button className="button numbers_item" type="button">2<span className=""></span></button>
-            <button className="button numbers_item" type="button">3<span className=""></span></button>
-            <button className="button numbers_item" type="button">0<span className=""></span></button>
-            <button className="button numbers_item" type="button">,<span className=""></span></button>
+            {symbols.map((item) => (
+                <button
+                    className="button numbers_item"
+                    type="button"
+                    key={item.symbol}
+                    onClick={() => setNumber(item.symbol)}
+                >
+                    {item.symbol}
+                </button>
+            ))}
         </div>
     );
 };
