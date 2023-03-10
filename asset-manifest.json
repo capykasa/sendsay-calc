@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/sendsay-calc/static/css/main.36b31c41.css",
-    "main.js": "/sendsay-calc/static/js/main.e78a19fc.js",
+    "main.js": "/sendsay-calc/static/js/main.3f6db778.js",
     "index.html": "/sendsay-calc/index.html",
     "main.36b31c41.css.map": "/sendsay-calc/static/css/main.36b31c41.css.map",
-    "main.e78a19fc.js.map": "/sendsay-calc/static/js/main.e78a19fc.js.map"
+    "main.3f6db778.js.map": "/sendsay-calc/static/js/main.3f6db778.js.map"
   },
   "entrypoints": [
     "static/css/main.36b31c41.css",
-    "static/js/main.e78a19fc.js"
+    "static/js/main.3f6db778.js"
   ]
 }
