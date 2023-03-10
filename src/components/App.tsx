@@ -114,7 +114,7 @@ const Main = () => {
         onDragStart={(evt) => dragStartHandler(evt, item)}
         onDragEnd={(evt) => dragEndHandler(evt)}
         onDrop={(evt) => dropCanvasHandler(evt, item)}
-        draggable={!NO_DRAGGABLE.includes(item.name)}
+        draggable={true}
         onDoubleClick={(evt) => doubleClick(evt, item)}
       >
         <div className="container">
@@ -182,7 +182,9 @@ const Main = () => {
           >
 
             {(canvasItems.length > 0)
-              ? canvasItems.map((item) => !NO_DRAGGABLE.includes(item.name) ? canvasElementTemplate(item) : canvasBlockedElementTemplate(item))
+              ? canvasItems.map((item) => !NO_DRAGGABLE.includes(item.name) && currentMode === Mode.Constructor
+                ? canvasElementTemplate(item)
+                : canvasBlockedElementTemplate(item))
               : emptyCanvasTemplate()}
             {canvasItems.length > 0 && moveElement ? lightingTemplate : ''}
 
