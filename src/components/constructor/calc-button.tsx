@@ -24,7 +24,7 @@ const CalcButton = () => {
     }
 
     return (
-        <div className="calc">
+        <div className="calc" id="calc">
             <button
                 className="button calc-button"
                 type="button"

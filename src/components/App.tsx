@@ -22,9 +22,10 @@ const Main = () => {
     { element: <CalcButton />, name: Component.Submit, blocked: false },
   ])
   const [canvasItems, setCanvasItems] = useState<DragItem[]>([]);
+  const [currentItem, setCurrentItem] = useState<DragItem | null>(null);
 
   const [moveElement, setMoveElement] = useState<boolean>(false);
-  const [currentItem, setCurrentItem] = useState<DragItem | null>(null);
+  const [startDrag, setStartDrag] = useState<boolean>(false);
 
   const blockedElement = (currentItemName: string) => {
     setItems(items.map((item) => item.name === currentItemName ? { ...item, blocked: true } : item));
@@ -35,9 +36,15 @@ const Main = () => {
 
   const dragStartHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
     setCurrentItem(item);
+    setStartDrag(true);
   }
 
   const dragEndHandler = (evt: DragEvent<HTMLDivElement>) => {
+    setMoveElement(false);
+    setStartDrag(false);
+  }
+
+  const dragLeaveHandler = (evt: DragEvent<HTMLDivElement>) => {
     setMoveElement(false);
   }
 
@@ -117,7 +124,7 @@ const Main = () => {
         draggable={true}
         onDoubleClick={(evt) => doubleClick(evt, item)}
       >
-        <div className="container">
+        <div className={`container ${nonTargetElements}`}>
           {item.element}
         </div>
       </div>
@@ -129,7 +136,7 @@ const Main = () => {
       <div className="wrapper" key={item.name}
         onDoubleClick={(evt) => doubleClick(evt, item)}
       >
-        <div className="container">
+        <div className={`container ${nonTargetElements}`}>
           {item.element}
         </div>
       </div>
@@ -139,7 +146,7 @@ const Main = () => {
   const emptyCanvasTemplate = () => {
     return (
       <div className={getHiddenClassForRuntime(Mode.Runtime, currentMode)}>
-        <div className="canvas__container-empty">
+        <div className="canvas__container-empty container-not-target">
           <svg className="canvas__container_svg" width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18.7778 1V5.44444" stroke="black" strokeWidth="2" strokeLinecap="round" />
             <path d="M21 3.22222L16.5556 3.22222" stroke="black" strokeWidth="2" strokeLinecap="round" />
@@ -162,7 +169,8 @@ const Main = () => {
       : 'container-for-hiding'
   }
 
-  const canvasHoverView = moveElement === true && canvasItems.length === 0 ? "canvas__container canvas__container-hover" : "canvas__container";
+  const canvasHoverView = moveElement && canvasItems.length === 0 ? "canvas__container canvas__container-hover" : "canvas__container";
+  const nonTargetElements = startDrag ? 'container-not-target' : '';
 
   return (
     <div className="page">
@@ -177,7 +185,7 @@ const Main = () => {
 
           <div className={canvasHoverView}
             onDragOver={(evt) => dragOverHandler(evt)}
-            onDragLeave={(evt) => dragEndHandler(evt)}
+            onDragLeave={(evt) => dragLeaveHandler(evt)}
             onDrop={(evt) => dropHandler(evt)}
           >
 

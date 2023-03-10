@@ -33,7 +33,7 @@ const Operators = () => {
     }
 
     return (
-        <div className="operators">
+        <div className="operators" id="operators">
             {operators.map((item) => (
                 <button
                     className="button operators_item"

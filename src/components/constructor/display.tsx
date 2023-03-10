@@ -28,7 +28,7 @@ const Display = () => {
     }
 
     return (
-        <div className="display">
+        <div className="display" id="display">
             <span className="display_value">{infinityDisplay(currentValue())}</span>
         </div>
     )

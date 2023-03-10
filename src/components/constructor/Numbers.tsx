@@ -31,7 +31,7 @@ const Numbers = () => {
     }
 
     return (
-        <div className="numbers">
+        <div className="numbers" id="numbers">
             {symbols.map((item) => (
                 <button
                     className="button numbers_item"
