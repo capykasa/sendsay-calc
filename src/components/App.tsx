@@ -8,7 +8,7 @@ import Numbers from './constructor/Numbers';
 import Operators from './constructor/Operators';
 import { Component, Mode, NO_DRAGGABLE } from '../consts';
 import { DragItem } from '../types/items';
-import { findDoubleElement, removeElement, replaceElements } from '../utils';
+import { addElement, findDoubleElement, removeElement, replaceElements } from '../utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/reducers/store';
 
@@ -59,7 +59,7 @@ const Main = () => {
     evt.preventDefault();
 
     if (currentItem === null) {
-      return;
+      return
     }
 
     const currentItemId = canvasItems.indexOf(currentItem)
@@ -76,37 +76,44 @@ const Main = () => {
     evt.preventDefault();
 
     if (currentItem === null) {
-      return;
+      return
     }
 
     if (canvasItems.length === 0) {
       setCanvasItems([currentItem]);
       blockedElement(currentItem.name);
-      return;
+      return
     }
 
     if (findDoubleElement(canvasItems, currentItem) === undefined) {
 
       NO_DRAGGABLE.includes(currentItem.name)
-        ? setCanvasItems(items => [currentItem, ...items])
-        : setCanvasItems(items => [...items, currentItem]);
+        ? canvasItems.unshift(currentItem)
+        : canvasItems.push(currentItem)
 
       blockedElement(currentItem.name);
     }
   }
 
-  const dropCanvasHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
-    if (currentItem === null) {
-      return;
-    }
+  const dropOnItemHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
+    evt.preventDefault();
 
-    if (findDoubleElement(canvasItems, currentItem) === undefined) {
+    if (currentItem === null) {
       return
     }
 
     const itemId = canvasItems.indexOf(item);
     const currentItemId = canvasItems.indexOf(currentItem);
 
+    if (findDoubleElement(canvasItems, currentItem) === undefined) {
+
+      NO_DRAGGABLE.includes(currentItem.name)
+        ? canvasItems.unshift(currentItem)
+        : addElement(canvasItems, currentItem, itemId);
+
+      blockedElement(currentItem.name);
+      return
+    }
     replaceElements(canvasItems, currentItemId, itemId);
   }
 
@@ -144,11 +151,11 @@ const Main = () => {
           onDragStart={(evt) => dragStartHandler(evt, item)}
           onDragOver={(evt) => dragOverCanvasHandler(evt, item)}
           onDragEnd={(evt) => dragEndHandler(evt)}
-          onDrop={(evt) => dropCanvasHandler(evt, item)}
+          onDrop={(evt) => dropOnItemHandler(evt, item)}
           draggable={true}
           onDoubleClick={(evt) => doubleClick(evt, item)}
         >
-          <div className={`container ${nonTargetElements}`}>
+          <div className={`canvas-container ${nonTargetElements}`}>
             {item.element}
           </div>
         </div>
@@ -163,7 +170,7 @@ const Main = () => {
         <div className="wrapper"
           onDoubleClick={(evt) => doubleClick(evt, item)}
         >
-          <div className={`container ${nonTargetElements}`}>
+          <div className={`canvas-container ${nonTargetElements}`}>
             {item.element}
           </div>
         </div>

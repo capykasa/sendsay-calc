@@ -5,6 +5,10 @@ export const findDoubleElement = (array: DragItem[], currentItem: DragItem) => {
     return array.find((item) => item.name === currentItem.name)
 }
 
+export const addElement = (array: DragItem[], item: DragItem, elementTo: number) => {
+    return array.splice(elementTo, 0, item)
+}
+
 export const replaceElements = (array: DragItem[], elementFrom: number, elementTo: number) => {
     return array.splice(elementTo, 0, array.splice(elementFrom, 1)[0])
 }
