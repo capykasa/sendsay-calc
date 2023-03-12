@@ -48,6 +48,7 @@ const Main = () => {
 
   const dragLeaveHandler = (evt: DragEvent<HTMLDivElement>) => {
     setMoveElement(false);
+    setHighlightingItem(null);
   }
 
   const dragOverHandler = (evt: DragEvent<HTMLDivElement>) => {
@@ -62,8 +63,12 @@ const Main = () => {
       return
     }
 
-    const currentItemId = canvasItems.indexOf(currentItem)
+    let currentItemId = canvasItems.indexOf(currentItem)
     const overItemId = canvasItems.indexOf(item)
+
+    if (currentItemId === -1) {
+      currentItemId = canvasItems.length
+    }
 
     if (currentItemId >= overItemId) {
       setHighlightingItem(canvasItems[overItemId - 1])
