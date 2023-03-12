@@ -1,6 +1,6 @@
 import '../scss/app.scss';
 
-import { DragEvent, MouseEvent, useState } from 'react';
+import React, { DragEvent, MouseEvent, useState } from 'react';
 import ModeSwitch from './canvas/mode-switch';
 import CalcButton from './constructor/calc-button';
 import Display from './constructor/display';
@@ -23,6 +23,7 @@ const Main = () => {
   ])
   const [canvasItems, setCanvasItems] = useState<DragItem[]>([]);
   const [currentItem, setCurrentItem] = useState<DragItem | null>(null);
+  const [highlightingItem, setHighlightingItem] = useState<DragItem | null>(null);
 
   const [moveElement, setMoveElement] = useState<boolean>(false);
   const [startDrag, setStartDrag] = useState<boolean>(false);
@@ -42,6 +43,7 @@ const Main = () => {
   const dragEndHandler = (evt: DragEvent<HTMLDivElement>) => {
     setMoveElement(false);
     setStartDrag(false);
+    setHighlightingItem(null);
   }
 
   const dragLeaveHandler = (evt: DragEvent<HTMLDivElement>) => {
@@ -51,6 +53,23 @@ const Main = () => {
   const dragOverHandler = (evt: DragEvent<HTMLDivElement>) => {
     evt.preventDefault();
     setMoveElement(true);
+  }
+
+  const dragOverCanvasHandler = (evt: DragEvent<HTMLDivElement>, item: DragItem) => {
+    evt.preventDefault();
+
+    if (currentItem === null) {
+      return;
+    }
+
+    const currentItemId = canvasItems.indexOf(currentItem)
+    const overItemId = canvasItems.indexOf(item)
+
+    if (currentItemId >= overItemId) {
+      setHighlightingItem(canvasItems[overItemId - 1])
+      return
+    }
+    setHighlightingItem(canvasItems[overItemId]);
   }
 
   const dropHandler = (evt: DragEvent<HTMLDivElement>) => {
@@ -102,11 +121,12 @@ const Main = () => {
     unblockedElement(item.name);
   }
 
-  console.log(moveElement)
-
   const elementTemplate = (item: DragItem) => {
     return (
-      <div className={`wrapper ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`} key={item.name}>
+      <div
+        className={`wrapper ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`}
+        key={item.name}
+      >
         <div className={item.blocked ? "container container-blocked" : "container"} key={item.name}
           onDragStart={(evt) => dragStartHandler(evt, item)}
           onDragEnd={(evt) => dragEndHandler(evt)}
@@ -119,29 +139,36 @@ const Main = () => {
 
   const canvasElementTemplate = (item: DragItem) => {
     return (
-      <div className="wrapper" key={item.name}
-        onDragStart={(evt) => dragStartHandler(evt, item)}
-        onDragEnd={(evt) => dragEndHandler(evt)}
-        onDrop={(evt) => dropCanvasHandler(evt, item)}
-        draggable={true}
-        onDoubleClick={(evt) => doubleClick(evt, item)}
-      >
-        <div className={`container ${nonTargetElements}`}>
-          {item.element}
+      <React.Fragment key={item.name}>
+        <div className="wrapper"
+          onDragStart={(evt) => dragStartHandler(evt, item)}
+          onDragOver={(evt) => dragOverCanvasHandler(evt, item)}
+          onDragEnd={(evt) => dragEndHandler(evt)}
+          onDrop={(evt) => dropCanvasHandler(evt, item)}
+          draggable={true}
+          onDoubleClick={(evt) => doubleClick(evt, item)}
+        >
+          <div className={`container ${nonTargetElements}`}>
+            {item.element}
+          </div>
         </div>
-      </div>
+        {item === highlightingItem ? lightingTemplate : ''}
+      </React.Fragment>
     );
   }
 
   const canvasBlockedElementTemplate = (item: DragItem) => {
     return (
-      <div className="wrapper" key={item.name}
-        onDoubleClick={(evt) => doubleClick(evt, item)}
-      >
-        <div className={`container ${nonTargetElements}`}>
-          {item.element}
+      <React.Fragment key={item.name}>
+        <div className="wrapper"
+          onDoubleClick={(evt) => doubleClick(evt, item)}
+        >
+          <div className={`container ${nonTargetElements}`}>
+            {item.element}
+          </div>
         </div>
-      </div>
+        {item === highlightingItem ? lightingTemplate : ''}
+      </React.Fragment>
     );
   }
 
@@ -196,7 +223,7 @@ const Main = () => {
                 ? canvasElementTemplate(item)
                 : canvasBlockedElementTemplate(item))
               : emptyCanvasTemplate()}
-            {(canvasItems.length > 0) && moveElement && (canvasItems.length < items.length)
+            {(canvasItems.length > 0) && (canvasItems.length < items.length) && moveElement && highlightingItem === null
               ? lightingTemplate
               : ''}
 
