@@ -102,9 +102,11 @@ const Main = () => {
     unblockedElement(item.name);
   }
 
+  console.log(moveElement)
+
   const elementTemplate = (item: DragItem) => {
     return (
-      <div className="wrapper" key={item.name}>
+      <div className={`wrapper ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`} key={item.name}>
         <div className={item.blocked ? "container container-blocked" : "container"} key={item.name}
           onDragStart={(evt) => dragStartHandler(evt, item)}
           onDragEnd={(evt) => dragEndHandler(evt)}
@@ -169,7 +171,7 @@ const Main = () => {
       : 'container-for-hiding'
   }
 
-  const canvasHoverView = moveElement && canvasItems.length === 0 ? "canvas__container canvas__container-hover" : "canvas__container";
+  const canvasHoverView = moveElement && canvasItems.length === 0 ? 'canvas__container-hover' : '';
   const nonTargetElements = startDrag ? 'container-not-target' : '';
 
   return (
@@ -183,7 +185,7 @@ const Main = () => {
         <div className="page-main__canvas">
           <ModeSwitch />
 
-          <div className={canvasHoverView}
+          <div className={`canvas__container ${canvasHoverView}`}
             onDragOver={(evt) => dragOverHandler(evt)}
             onDragLeave={(evt) => dragLeaveHandler(evt)}
             onDrop={(evt) => dropHandler(evt)}
@@ -194,7 +196,9 @@ const Main = () => {
                 ? canvasElementTemplate(item)
                 : canvasBlockedElementTemplate(item))
               : emptyCanvasTemplate()}
-            {canvasItems.length > 0 && moveElement ? lightingTemplate : ''}
+            {(canvasItems.length > 0) && moveElement && (canvasItems.length < items.length)
+              ? lightingTemplate
+              : ''}
 
           </div>
         </div>

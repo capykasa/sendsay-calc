@@ -24,9 +24,9 @@ const CalcButton = () => {
     }
 
     return (
-        <div className="calc" id="calc">
+        <div className={`calc ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`} id="calc">
             <button
-                className="button calc-button"
+                className={`button calc-button ${currentMode === Mode.Runtime ? 'cursor-pointer' : 'cursor-inherit'}`}
                 type="button"
                 onClick={() => submitButton()}
             >

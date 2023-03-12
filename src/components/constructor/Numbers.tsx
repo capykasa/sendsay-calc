@@ -31,10 +31,10 @@ const Numbers = () => {
     }
 
     return (
-        <div className="numbers" id="numbers">
+        <div className={`numbers ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`} id="numbers">
             {symbols.map((item) => (
                 <button
-                    className="button numbers_item"
+                    className={`button numbers_item ${currentMode === Mode.Runtime ? 'cursor-pointer' : 'cursor-inherit'}`}
                     type="button"
                     key={item.symbol}
                     onClick={() => setNumber(item.symbol)}

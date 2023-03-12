@@ -33,10 +33,10 @@ const Operators = () => {
     }
 
     return (
-        <div className="operators" id="operators">
+        <div className={`operators ${currentMode === Mode.Constructor ? 'cursor-grab' : ''}`} id="operators">
             {operators.map((item) => (
                 <button
-                    className="button operators_item"
+                    className={`button operators_item ${currentMode === Mode.Runtime ? 'cursor-pointer' : 'cursor-inherit'}`}
                     type="button"
                     key={item.operator}
                     onClick={() => currentInput(item.operator)}

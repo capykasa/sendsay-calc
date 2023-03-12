@@ -63,7 +63,17 @@ body {
     border-radius: 4px;
 }
 
-/* СДЕЛАТЬ КУРСОРЫ */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-grab {
+    cursor: grab;
+}
+
+.cursor-inherit {
+    cursor: inherit;
+}
 
 .container-blocked {
     opacity: 50%;
